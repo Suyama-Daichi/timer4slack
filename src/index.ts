@@ -1,10 +1,12 @@
 import { Response } from './APIGWResponse.d';
 import { Context, APIGatewayEvent } from "aws-lambda";
+import { parse } from 'query-string';
 import axios from 'axios';
 import * as dotenv from "dotenv";
 dotenv.config();
 
 export async function handler(event: APIGatewayEvent, context?: Context): Promise<Response> {
+    const body = parse(event.body as string)
     const token = process.env['SECRET'];
     const baseRequest = axios.create({
         baseURL: `url`,
@@ -29,8 +31,6 @@ export async function handler(event: APIGatewayEvent, context?: Context): Promis
         isBase64Encoded: false,
         statusCode: 200,
         headers: {},
-        body: JSON.stringify({
-            propName: 'success'
-        })
+        body: JSON.stringify(body.text)
     };
 }

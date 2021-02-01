@@ -1,5 +1,5 @@
 {
-  "name": "aircon-wind-direction",
+  "name": "timer4slack",
   "version": "0.1.0",
   "description": "LambdaTemplate",
   "main": "dist/index.js",
@@ -33,6 +33,8 @@
     "@types/axios": "^0.14.0",
     "@types/dotenv": "^8.2.0",
     "aws-sdk": "^2.738.0",
-    "axios": "^0.20.0"
+    "axios": "^0.20.0",
+    "install": "^0.13.0",
+    "query-string": "^6.13.8"
   }
 }
