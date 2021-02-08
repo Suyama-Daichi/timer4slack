@@ -4,8 +4,10 @@ import * as queryString from 'query-string'
 import axios from 'axios'
 import * as dotenv from 'dotenv'
 import { SlackCommand } from './SlackCommand'
-import { query } from './query'
+import { Query } from './query'
 dotenv.config()
+const digExp = /[\d]{0,3}/g
+const unitExp = /[^\d]{3,7}/g
 
 export async function handler(
   event: APIGatewayEvent,
@@ -14,10 +16,10 @@ export async function handler(
   const body = (queryString.parse(event.body ?? '') as unknown) as SlackCommand
   const text = body.text
 
-  const query: query[] = []
+  const query: Query[] = []
 
   try {
-    checkFormat(text)
+    const query = format(text)
   } catch (error) {
     return {
       isBase64Encoded: false,
@@ -36,18 +38,25 @@ export async function handler(
   }
 }
 
-const checkFormat = (text: string) => {
-  const digExp = /[\d]{0,2}/g
-  const unitExp = /[^\d]{3,5}/g
-
+const format = (text: string): Query[] => {
   const digs = text
     .match(digExp)
     ?.filter((f) => f)
     .map((m) => Number(m))
   const units = text.match(unitExp)?.filter((f) => f)
 
-  if (digs?.length === 0 || !units) {
+  if (!digs || !units || digs?.length === 0 || !units) {
     throw new Error('正しいフォーマットを指定してください')
   }
-  return true
+
+  const querys = digs.map(
+    (m, i): Query => {
+      return {
+        unit: units[i],
+        time: m,
+      }
+    }
+  )
+
+  return querys
 }

@@ -1,4 +1,4 @@
-export interface query {
-  unit: 'hours' | 'hour' | 'min' | 'minutes'
+export interface Query {
+  unit: string
   time: number
 }
